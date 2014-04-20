@@ -8,6 +8,7 @@ import database
 import appconfig
 import image
 import regex
+import os
 
 
 URL = 'http://www.thehindu.com/news/cities/Mangalore/?service=rss'
@@ -15,12 +16,13 @@ http_request = HttpRequest()
 http_response = http_request.get_response(URL, headers =appconfig.get_config(appconfig.REQ_HEADERS_MOZILLA))
 soup = Soup(http_response.content)
 item_list = soup.find_all('item')
-
+print item_list
 
 class HinduExtractor(Xtractor):
 
     def parse_url(self):
         db = database.get_db_connection()
+        image_path = ''
         for item in item_list:
             news ={}
             title =  item.find('title').text
@@ -37,6 +39,7 @@ class HinduExtractor(Xtractor):
 
 
             news['title'] = title
+            print title
             news['description'] = description
             news['link'] = href_link
             news['pubDate'] = publish_date
@@ -51,14 +54,19 @@ class HinduExtractor(Xtractor):
             if tag:
                 image_link =  (tag.find('img'))['src']
                 req = request.get(image_link)
-                image_name =regex.remove_white_spaces.sub('',title[:5]+".jpg")
+                image_name =regex.remove_white_spaces.sub('',title[:10]+".jpg")
                 path = appconfig.get_config(appconfig.IMAGE_PATH)
                 path = path['thumbnail_path']
-                image_path = image.create_thumbnail(size, req.content, image_name, path)
-                news['thumbnail_path'] = image_path
-            #db.news.insert(news)
+                now = datetime.datetime.now()
+                folder_name = str(now.strftime("%Y_%m_%d"))
+                path = path+folder_name+"/"
 
-            print news
+                image_path = image.create_thumbnail(size, req.content, image_name, path)
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                news['thumbnail_path'] = image_path
+            db.news.insert(news)
+
 
 
             '''
