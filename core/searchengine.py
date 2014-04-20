@@ -16,7 +16,7 @@ http_request = HttpRequest()
 http_response = http_request.get_response(URL, headers =appconfig.get_config(appconfig.REQ_HEADERS_MOZILLA))
 soup = Soup(http_response.content)
 item_list = soup.find_all('item')
-print item_list
+#print item_list
 
 class HinduExtractor(Xtractor):
 
@@ -39,7 +39,7 @@ class HinduExtractor(Xtractor):
 
 
             news['title'] = title
-            print title
+            #print title
             news['description'] = description
             news['link'] = href_link
             news['pubDate'] = publish_date
@@ -65,22 +65,26 @@ class HinduExtractor(Xtractor):
                 if not os.path.exists(path):
                     os.makedirs(path)
                 news['thumbnail_path'] = image_path
-            db.news.insert(news)
+            #db.news.insert(news)
 
 
 
             '''
             c =0
             for atricle in db.news.find():
-                print atricle['title']
-                print atricle['description']
+                print "TITLE: ",atricle['title']
+                print "DESC:", atricle['description']
+                print "THUMB PATH:", atricle.get('thumbnail_path')
+                print "LINK: ", atricle['link']
+                print "PUB DATE:", atricle['pubDate']
+                print "CREATED_DATE",atricle['created_date']
                 print '===================================================='
                 print '\n'
                 c = c+1
 
             print '============================================================================================\n',c
-
             '''
+
 
 
 HinduExtractor().parse_url()
