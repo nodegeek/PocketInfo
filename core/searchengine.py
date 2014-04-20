@@ -65,7 +65,7 @@ class HinduExtractor(Xtractor):
                 if not os.path.exists(path):
                     os.makedirs(path)
                 news['thumbnail_path'] = image_path
-            #db.news.insert(news)
+            db.news.insert(news)
 
 
 
