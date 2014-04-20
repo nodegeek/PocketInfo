@@ -60,10 +60,9 @@ class HinduExtractor(Xtractor):
                 now = datetime.datetime.now()
                 folder_name = str(now.strftime("%Y_%m_%d"))
                 path = path+folder_name+"/"
-
-                image_path = image.create_thumbnail(size, req.content, image_name, path)
                 if not os.path.exists(path):
                     os.makedirs(path)
+                image_path = image.create_thumbnail(size, req.content, image_name, path)
                 news['thumbnail_path'] = image_path
             db.news.insert(news)
 
