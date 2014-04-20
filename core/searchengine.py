@@ -63,13 +63,15 @@ class HinduExtractor(Xtractor):
                 path = path+folder_name+"/"
                 if not os.path.exists(path):
                     os.makedirs(path)
-                image_path = image.create_thumbnail(size, req.content, image_name, path)
-                news['thumbnail_path'] = image_path
-            try:
-                db.news.insert(news)
-            except DuplicateKeyError :
-                print 'duplicate title found'
-                pass
+
+                try:
+                    db.news.insert(news)
+                    if image_link:
+                        image_path = image.create_thumbnail(size, req.content, image_name, path)
+                        news['thumbnail_path'] = image_path
+                except DuplicateKeyError :
+                    print 'duplicate title found'
+                    pass
 
 
 
