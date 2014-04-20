@@ -56,7 +56,7 @@ class HinduExtractor(Xtractor):
                 req = request.get(image_link)
                 image_name =regex.remove_white_spaces.sub('',title[:10]+".jpg")
                 path = appconfig.get_config(appconfig.IMAGE_PATH)
-                path = path['thumbnail_path']
+                path = (path['thumbnail_path']).strip()
                 now = datetime.datetime.now()
                 folder_name = str(now.strftime("%Y_%m_%d"))
                 path = path+folder_name+"/"
