@@ -1,3 +1,4 @@
+from pymongo.errors import DuplicateKeyError
 import requests as request
 import re
 from bs4 import BeautifulSoup as Soup
@@ -64,7 +65,12 @@ class HinduExtractor(Xtractor):
                     os.makedirs(path)
                 image_path = image.create_thumbnail(size, req.content, image_name, path)
                 news['thumbnail_path'] = image_path
-            db.news.insert(news)
+            try:
+                db.news.insert(news)
+            except DuplicateKeyError :
+                print 'duplicate title found'
+                pass
+
 
 
 
